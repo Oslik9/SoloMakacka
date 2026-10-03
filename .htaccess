@@ -11,6 +11,12 @@ Options -Indexes
 	Options +FollowSymlinks
 	RewriteEngine On
 
+	# Redirect explicitly requested index.php URLs to clean URLs.
+	# Leave POST requests intact so submitted forms keep their data.
+	RewriteCond %{REQUEST_METHOD} ^(?:GET|HEAD)$
+	RewriteCond %{THE_REQUEST} \s/+([^?\s]*/)?index\.php(?:[/\s?]) [NC]
+	RewriteRule ^index\.php(?:/(.*))?$ /%1$1 [R=302,L]
+
 	# If you installed CodeIgniter in a subfolder, you will need to
 	# change the following line to match the subfolder you need.
 	# http://httpd.apache.org/docs/current/mod/mod_rewrite.html#rewritebase

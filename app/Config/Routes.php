@@ -6,7 +6,7 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 
-$routes->get('/', 'ParisNice::index');
+$routes->addRedirect('/', 'pariz-nice');
 
 $routes->get('pariz-nice', 'ParisNice::index');
 
@@ -22,5 +22,6 @@ $routes->get(
 
 $routes->post(
     'race-years',
-    'ParisNice::store'
+    'ParisNice::store',
+    ['filter' => 'csrf']
 );

@@ -1,36 +1,81 @@
 <?= $this->extend('templates/main') ?>
 <?= $this->section('content') ?>
-<div class="row align-items-center mb-4">
-    <div class="col-md"><h1 class="display-6 fw-bold mb-1">Paříž–Nice</h1><p class="text-secondary mb-0">Přehled všech ročníků závodu</p></div>
-    <div class="col-md-auto mt-3 mt-md-0"><a href="<?= site_url('race-years/create') ?>" class="btn btn-primary">Přidat ročník</a></div>
+<header class="mb-4">
+    <h1 class="display-6 fw-bold mb-2">Paříž–Nice</h1>
+    <p class="text-secondary mb-0">Všechny ročníky od nejnovějšího. Etapy, jejich vítězové a průběžné pořadí na jednom místě.</p>
+</header>
+<div class="d-flex flex-wrap gap-2 mb-4">
+    <span class="badge rounded-pill text-bg-primary px-3 py-2">Počet ročníků: <?= count($raceYears) ?></span>
+    <span class="badge rounded-pill bg-white border text-secondary px-3 py-2">Muži · Elite</span>
 </div>
-<?php if (empty($raceYears)): ?><div class="alert alert-info">Pro závod Paříž–Nice nebyly nalezeny žádné ročníky.</div><?php endif; ?>
+<?php if (empty($raceYears)): ?>
+    <div class="alert alert-info">Pro závod Paříž–Nice zatím nejsou uložené žádné ročníky.</div>
+<?php endif; ?>
+
 <?php foreach ($raceYears as $raceYear): ?>
-<div class="card border-0 shadow-sm mb-4">
-    <div class="card-header bg-white py-3"><div class="row align-items-center">
-        <?php if (!empty($raceYear['logo'])): ?><div class="col-auto"><img src="<?= base_url($raceYear['logo']) ?>" alt="Logo" class="img-fluid" width="100"></div><?php endif; ?>
-        <div class="col"><h2 class="h4 fw-bold mb-1"><?= esc($raceYear['real_name']) ?></h2><div class="d-flex flex-wrap gap-2">
-            <?php if (!empty($raceYear['year'])): ?><span class="badge text-bg-dark"><?= esc($raceYear['year']) ?></span><?php endif; ?>
-            <span class="badge text-bg-light"><?= !empty($raceYear['start_date']) ? date('d. m. Y', strtotime($raceYear['start_date'])) : '–' ?> – <?= !empty($raceYear['end_date']) ? date('d. m. Y', strtotime($raceYear['end_date'])) : '–' ?></span>
-            <span class="badge text-bg-primary"><?= number_format((float)$raceYear['total_distance'], 0, ',', ' ') ?> km</span>
-        </div></div>
-    </div></div>
-    <div class="card-body p-0"><div class="table-responsive"><table class="table table-hover table-striped align-middle mb-0">
-        <thead class="table-dark"><tr><th>Etapa</th><th>Datum</th><th>Trasa</th><th>Délka</th><th>Převýšení</th><th>Typ etapy</th><th>Vítěz</th><th>Výsledky</th></tr></thead>
-        <tbody>
-        <?php foreach ($raceYear['stages'] as $stage): ?><tr>
-            <td><span class="badge text-bg-dark"><?= esc($stage['number'] ?? '–') ?></span></td>
-            <td class="text-nowrap"><?= !empty($stage['date']) ? date('d. m. Y', strtotime($stage['date'])) : '–' ?></td>
-            <td><?= esc($stage['departure'] ?? '') ?><?= (!empty($stage['departure']) && !empty($stage['arrival'])) ? ' → ' : '' ?><?= esc($stage['arrival'] ?? '') ?></td>
-            <td class="text-nowrap fw-semibold"><?= $stage['distance'] !== null ? number_format((float)$stage['distance'], 1, ',', ' ') . ' km' : '–' ?></td>
-            <td class="text-nowrap"><?= !empty($stage['vertical_meters']) ? number_format((int)$stage['vertical_meters'], 0, ',', ' ') . ' m' : '–' ?></td>
-            <td><span class="badge text-bg-secondary"><?= esc($stage['stage_type'] ?? 'Neznámý') ?></span></td>
-            <td class="fw-semibold"><?= esc($stage['winner'] ?: '–') ?></td>
-            <td><div class="btn-group btn-group-sm"><a href="<?= site_url('pariz-nice/stage/'.$stage['id'].'/results/1') ?>" class="btn btn-outline-primary">Etapa</a><a href="<?= site_url('pariz-nice/stage/'.$stage['id'].'/results/4') ?>" class="btn btn-outline-dark">Po etapě</a></div></td>
-        </tr><?php endforeach; ?>
-        <?php if (empty($raceYear['stages'])): ?><tr><td colspan="8" class="text-center text-secondary py-5">Tento ročník nemá žádné etapy.</td></tr><?php endif; ?>
-        </tbody>
-    </table></div></div>
-</div>
+    <section class="card border-0 shadow-sm mb-4" id="rocnik-<?= (int) $raceYear['id'] ?>" aria-labelledby="nazev-<?= (int) $raceYear['id'] ?>">
+        <div class="card-header bg-white p-4">
+            <div class="d-flex flex-wrap align-items-center gap-3">
+                <?php if ($raceYear['logo_url']): ?>
+                    <img src="<?= esc($raceYear['logo_url'], 'attr') ?>" alt="Logo <?= esc($raceYear['real_name'], 'attr') ?>" class="img-fluid object-fit-contain" width="72" height="72" loading="lazy">
+                <?php endif; ?>
+                <div class="flex-grow-1">
+                    <div class="text-primary fw-semibold small mb-1">ROČNÍK <?= esc($raceYear['year']) ?></div>
+                    <h2 class="h4 fw-bold mb-2" id="nazev-<?= (int) $raceYear['id'] ?>"><?= esc($raceYear['real_name']) ?></h2>
+                    <div class="text-secondary small">
+                        <?= $raceYear['start_date'] !== '0000-00-00' ? date('d. m. Y', strtotime($raceYear['start_date'])) : '–' ?> –
+                        <?= $raceYear['end_date'] !== '0000-00-00' ? date('d. m. Y', strtotime($raceYear['end_date'])) : '–' ?>
+                    </div>
+                </div>
+                <div class="text-md-end">
+                    <div class="h4 fw-bold mb-1"><?= number_format((float) $raceYear['total_distance'], 0, ',', ' ') ?> <span class="fs-6 fw-normal text-secondary">km</span></div>
+                    <div class="small text-secondary">Celková délka · <?= count($raceYear['stages']) ?> etap</div>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col" class="ps-4">Etapa</th>
+                        <th scope="col">Datum</th>
+                        <th scope="col">Trasa</th>
+                        <th scope="col">Délka</th>
+                        <th scope="col">Převýšení</th>
+                        <th scope="col">Typ etapy</th>
+                        <th scope="col">Vítěz</th>
+                        <th scope="col" class="pe-4">Pořadí</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($raceYear['stages'] as $stage): ?>
+                        <tr>
+                            <th scope="row" class="ps-4"><span class="badge text-bg-dark"><?= esc($stage['number'] ?? '–') ?></span></th>
+                            <td class="text-nowrap small"><?= $stage['date'] !== '0000-00-00' ? date('d. m. Y', strtotime($stage['date'])) : '–' ?></td>
+                            <td class="small"><?= esc($stage['departure'] ?: '–') ?> → <?= esc($stage['arrival'] ?: '–') ?></td>
+                            <td class="text-nowrap fw-semibold"><?= number_format((float) $stage['distance'], 1, ',', ' ') ?> km</td>
+                            <td class="text-nowrap"><?= number_format((int) $stage['vertical_meters'], 0, ',', ' ') ?> m</td>
+                            <td class="small">
+                                <?= esc($stage['stage_type'] ?? 'Neznámý') ?>
+                                <?php if (in_array($stage['note'], ['ITT', 'TTT'], true)): ?>
+                                    <span class="badge text-bg-secondary"><?= esc($stage['note']) ?></span>
+                                <?php endif; ?>
+                            </td>
+                            <td class="fw-semibold small"><?= esc(trim($stage['winner_first_name'] . ' ' . $stage['winner_last_name']) ?: '–') ?></td>
+                            <td class="pe-4">
+                                <div class="btn-group btn-group-sm text-nowrap" role="group" aria-label="Pořadí etapy">
+                                    <a class="btn btn-outline-primary" href="<?= site_url('pariz-nice/stage/' . (int) $stage['id'] . '/results/1') ?>">V etapě</a>
+                                    <a class="btn btn-outline-primary" href="<?= site_url('pariz-nice/stage/' . (int) $stage['id'] . '/results/4') ?>">Po etapě</a>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    <?php if (empty($raceYear['stages'])): ?>
+                        <tr><td colspan="8" class="text-center text-secondary py-5">Tento ročník zatím nemá žádné etapy.</td></tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </section>
 <?php endforeach; ?>
 <?= $this->endSection() ?>
