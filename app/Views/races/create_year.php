@@ -4,7 +4,7 @@
     <div class="col-lg-9 col-xl-8">
         <header class="mb-4">
             <h1 class="display-6 fw-bold mb-2">Přidat ročník závodu</h1>
-            <p class="text-secondary mb-0">Vyberte mužský závod kategorie E a doplňte údaje nového ročníku.</p>
+            <p class="text-secondary mb-0">Vyberte mužský závod kategorie E. Logo je nepovinné.</p>
         </header>
         <div class="card border-0 shadow-sm">
             <div class="card-body p-4 p-lg-5">
@@ -19,7 +19,7 @@
                         <select class="form-select" id="race_id" name="race_id" aria-describedby="race-help" required>
                             <option value="">Vyberte závod</option>
                             <?php foreach ($races as $race): ?>
-                                <option value="<?= (int) $race['id'] ?>" <?= (string) old('race_id') === (string) $race['id'] ? 'selected' : '' ?>><?= esc($race['default_name']) ?></option>
+                                <option value="<?= (int) $race['id'] ?>" <?= (string) old('race_id', '') === (string) $race['id'] ? 'selected' : '' ?>><?= esc($race['default_name']) ?></option>
                             <?php endforeach; ?>
                         </select>
                         <div class="form-text" id="race-help">Pouze mužské závody kategorie E (Elite).</div>
@@ -39,9 +39,9 @@
                         </div>
                     </div>
                     <div class="mb-4">
-                        <label class="form-label fw-semibold" for="logo">Logo závodu</label>
-                        <input type="file" class="form-control" id="logo" name="logo" accept=".png,.jpg,.jpeg,.webp,.gif" aria-describedby="logo-help" required>
-                        <div class="form-text" id="logo-help">PNG, JPG, WebP nebo GIF, nejvýše 2 MB.</div>
+                        <label class="form-label fw-semibold" for="logo">Logo závodu (nepovinné)</label>
+                        <input type="file" class="form-control" id="logo" name="logo" accept=".png,.jpg,.jpeg,.webp,.gif" aria-describedby="logo-help">
+                        <div class="form-text" id="logo-help">PNG, JPG, WebP nebo GIF, nejvýše 2 MB. Ročník můžete přidat i bez loga.</div>
                     </div>
                     <?php if (empty($races)): ?>
                         <div class="alert alert-info">V databázi nejsou žádné mužské závody kategorie E.</div>

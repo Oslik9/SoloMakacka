@@ -29,7 +29,7 @@ class ParisNice extends BaseController
                 $data['raceYears'][$index]['total_distance'] = round($distance);
             }
 
-            $logoName = basename($raceYear['logo']);
+            $logoName = basename($raceYear['logo'] ?? '');
             $logoPath = 'uploads/race-logos/' . $logoName;
             $data['raceYears'][$index]['logo_url'] = '';
             if (is_file(FCPATH . $logoName)) {

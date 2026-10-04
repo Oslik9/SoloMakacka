@@ -14,14 +14,12 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="mainNavbar">
-            <ul class="navbar-nav ms-auto">
+            <ul class="navbar-nav me-auto">
                 <li class="nav-item">
                     <a class="nav-link <?= url_is('pariz-nice*') ? 'active' : '' ?>" href="<?= site_url('pariz-nice') ?>" <?= url_is('pariz-nice*') ? 'aria-current="page"' : '' ?>>Paříž–Nice</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link <?= url_is('race-years*') ? 'active' : '' ?>" href="<?= site_url('race-years/create') ?>" <?= url_is('race-years*') ? 'aria-current="page"' : '' ?>>Přidat ročník</a>
-                </li>
             </ul>
+            <a class="btn <?= url_is('race-years/create') ? 'btn-light' : 'btn-outline-light' ?> mt-3 mt-md-0" href="<?= site_url('race-years/create') ?>" <?= url_is('race-years/create') ? 'aria-current="page"' : '' ?>>+ Přidat ročník</a>
         </div>
     </div>
 </nav>
@@ -46,12 +44,6 @@
 <?php endif; ?>
     <?= $this->renderSection('content') ?>
 </main>
-<footer class="border-top bg-white">
-    <div class="container py-4 d-flex flex-wrap justify-content-between gap-2 text-secondary small">
-        <span>Cyklistické závody</span>
-        <span>Paříž–Nice · Ročníky, etapy a výsledky</span>
-    </div>
-</footer>
 <script src="<?= base_url('node_modules/bootstrap/dist/js/bootstrap.bundle.min.js') ?>"></script>
 </body>
 </html>

@@ -19,9 +19,7 @@
                 <tr>
                     <th scope="col" class="ps-4">Pořadí</th>
                     <th scope="col">Jezdec</th>
-                    <th scope="col">Země</th>
-                    <th scope="col">Čas</th>
-                    <th scope="col" class="pe-4">Poznámka</th>
+                    <th scope="col" class="pe-4">Čas</th>
                 </tr>
             </thead>
             <tbody>
@@ -29,13 +27,11 @@
                     <tr>
                         <th scope="row" class="ps-4"><?= esc($result['rank']) ?>.</th>
                         <td class="fw-semibold"><?= esc(trim($result['first_name'] . ' ' . $result['last_name'])) ?></td>
-                        <td><span class="badge text-bg-light border"><?= esc(strtoupper($result['country'] ?? '')) ?></span></td>
-                        <td class="text-nowrap"><?= esc($result['time'] ?? '') ?></td>
-                        <td class="text-secondary pe-4"><?= esc($result['note']) ?></td>
+                        <td class="text-nowrap pe-4"><?= esc($result['time'] ?? '') ?></td>
                     </tr>
                 <?php endforeach; ?>
                 <?php if (empty($results)): ?>
-                    <tr><td colspan="5" class="text-center text-secondary py-5">Pro toto pořadí nejsou v databázi dostupné výsledky.</td></tr>
+                    <tr><td colspan="3" class="text-center text-secondary py-5">Pro toto pořadí nejsou v databázi dostupné výsledky.</td></tr>
                 <?php endif; ?>
             </tbody>
         </table>

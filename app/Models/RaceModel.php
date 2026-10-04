@@ -26,7 +26,7 @@ class RaceModel extends Model
     public function getMaleCategoryERace($raceId)
     {
         return $this->db->table('race')
-            ->select('race.id, race.country')
+            ->select('race.id, race.default_name, race.country')
             ->join('race_year', 'race_year.id_race = race.id')
             ->where('race.id', $raceId)
             ->where('race_year.sex', 'M')

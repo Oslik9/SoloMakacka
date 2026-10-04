@@ -22,7 +22,7 @@ final class RacesTest extends CIUnitTestCase
         // Stejné názvy sloupců jako v dodaném SQL, bez časových razítek.
         $schemas = [
             'race' => 'id INTEGER PRIMARY KEY, default_name TEXT NOT NULL, link TEXT NOT NULL, country TEXT NOT NULL, type TEXT NOT NULL',
-            'race_year' => 'id INTEGER PRIMARY KEY AUTOINCREMENT, real_name TEXT NOT NULL, id_race INTEGER NOT NULL, year INTEGER NOT NULL, start_date TEXT NOT NULL, end_date TEXT NOT NULL, uci_tour INTEGER NOT NULL, logo TEXT NOT NULL, sex TEXT NOT NULL, category TEXT NOT NULL, country TEXT NOT NULL',
+            'race_year' => 'id INTEGER PRIMARY KEY AUTOINCREMENT, real_name TEXT NOT NULL, id_race INTEGER NOT NULL, year INTEGER NOT NULL, start_date TEXT NOT NULL, end_date TEXT NOT NULL, uci_tour INTEGER NOT NULL, logo TEXT, sex TEXT NOT NULL, category TEXT NOT NULL, country TEXT NOT NULL',
             'stage' => 'id INTEGER PRIMARY KEY, number INTEGER, date TEXT NOT NULL, note TEXT NOT NULL, departure TEXT NOT NULL, arrival TEXT NOT NULL, distance REAL NOT NULL, parcour_type INTEGER NOT NULL, vertical_meters INTEGER NOT NULL, profile TEXT NOT NULL, id_race_year INTEGER NOT NULL, link TEXT NOT NULL',
             'parcour_type' => 'id INTEGER PRIMARY KEY, name TEXT NOT NULL, icon TEXT NOT NULL',
             'rider' => 'id INTEGER PRIMARY KEY, first_name TEXT NOT NULL, last_name TEXT NOT NULL, country TEXT NOT NULL',
@@ -141,7 +141,26 @@ final class RacesTest extends CIUnitTestCase
         $xpath = new DOMXPath($document);
         $this->assertSame('51 km', trim($xpath->query('//section[@id="rocnik-10"]//div[contains(@class,"h4")]')->item(0)->textContent));
         $this->assertSame(0, $xpath->query('//section[@id="rocnik-11"]//div[contains(@class,"h4")]')->length);
-        $this->assertSame('', trim($xpath->query('//section[@id="rocnik-10"]//tbody/tr[2]/td[6]')->item(0)->textContent));
+        $this->assertSame('', trim($xpath->query('//section[@id="rocnik-10"]//tbody/tr[2]/td[5]')->item(0)->textContent));
+    }
+
+    public function testParisNiceYearWithoutLogoAppearsInOverview(): void
+    {
+        $model = new RaceYearModel($this->raceDb);
+        $id = $model->insert([
+            'real_name' => 'Ročník bez loga', 'id_race' => 124, 'year' => 2025,
+            'start_date' => '2025-03-01', 'end_date' => '2025-03-08', 'logo' => null,
+            'sex' => 'M', 'category' => 'E', 'country' => 'cz', 'uci_tour' => 0,
+        ]);
+        $this->assertNotFalse($id);
+        $this->assertNull($model->find($id)['logo']);
+
+        $response = $this->get('/pariz-nice');
+        $response->assertStatus(200);
+        $html = $response->response()->getBody();
+        $this->assertStringContainsString('Ročník bez loga', $html);
+        $this->assertStringContainsString('id="rocnik-' . $id . '"', $html);
+        $this->assertStringNotContainsString('<img', $html);
     }
 
     public function testFormShowsExpectedFieldsAndRaceOptions(): void
@@ -155,6 +174,7 @@ final class RacesTest extends CIUnitTestCase
         $this->assertSame('number', $xpath->query('//input[@name="year"]')->item(0)->getAttribute('type'));
         $this->assertFalse($xpath->query('//input[@name="start_date"]')->item(0)->hasAttribute('min'));
         $this->assertFalse($xpath->query('//input[@name="logo"]')->item(0)->hasAttribute('maxlength'));
+        $this->assertFalse($xpath->query('//input[@name="logo"]')->item(0)->hasAttribute('required'));
         $this->assertSame(2, $xpath->query('//select[@name="race_id"]/option')->length);
     }
 

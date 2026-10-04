@@ -37,7 +37,7 @@ class StageModel extends Model
     public function getStageResults($stageId, $typeResult)
     {
         return $this->db->table('result')
-            ->select('result.rank, result.time, result.note, rider.first_name, rider.last_name, rider.country')
+            ->select('result.rank, result.time, rider.first_name, rider.last_name')
             ->join('rider', 'rider.id = result.id_rider', 'left')
             ->where('result.id_stage', $stageId)
             ->where('result.type_result', $typeResult)

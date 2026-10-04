@@ -31,8 +31,12 @@ class RaceYears extends BaseController
             'year' => 'required|integer',
             'start_date' => 'required|valid_date[Y-m-d]',
             'end_date' => 'required|valid_date[Y-m-d]',
-            'logo' => 'uploaded[logo]|max_size[logo,2048]|is_image[logo]|mime_in[logo,image/png,image/jpeg,image/webp,image/gif]|ext_in[logo,png,jpg,jpeg,webp,gif]',
         ];
+
+        $logo = $this->request->getFile('logo');
+        if ($logo && $logo->getName() != '') {
+            $rules['logo'] = 'uploaded[logo]|max_size[logo,2048]|is_image[logo]|mime_in[logo,image/png,image/jpeg,image/webp,image/gif]|ext_in[logo,png,jpg,jpeg,webp,gif]';
+        }
 
         if (!$this->validateData($data, $rules)) {
             return redirect()->to(site_url('race-years/create'))->withInput();
@@ -49,12 +53,12 @@ class RaceYears extends BaseController
                 ->with('error', 'Vyberte mužský závod kategorie E.');
         }
 
-        $logo = $this->request->getFile('logo');
-        // Nové jméno zabrání přepsání jiného loga.
-        $logoName = $logo->getRandomName();
-        $logoPath = FCPATH . 'uploads/race-logos/' . $logoName;
+        $logoName = null;
+        if ($logo && $logo->isValid()) {
+            $logoName = $logo->getRandomName();
+            $logo->move(FCPATH . 'uploads/race-logos', $logoName);
+        }
 
-        $logo->move(FCPATH . 'uploads/race-logos', $logoName);
         $yearModel = new RaceYearModel();
         $id = $yearModel->insert([
             'real_name' => trim($data['real_name']),
@@ -71,14 +75,19 @@ class RaceYears extends BaseController
         ]);
 
         if (!$id) {
-            if (is_file($logoPath)) {
-                unlink($logoPath);
+            if ($logoName !== null) {
+                unlink(FCPATH . 'uploads/race-logos/' . $logoName);
             }
             return redirect()->to(site_url('race-years/create'))->withInput()
-                ->with('error', 'Ročník se nepodařilo uložit. Vyberte znovu logo a zkuste to znovu.');
+                ->with('error', 'Ročník se nepodařilo uložit. Zkontrolujte údaje a zkuste to znovu.');
         }
 
-        return redirect()->to(site_url('pariz-nice'))
-            ->with('success', 'Ročník byl přidán.');
+        $redirectUrl = site_url('race-years/create');
+        if ($race['id'] == 124) {
+            $redirectUrl = site_url('pariz-nice') . '#rocnik-' . $id;
+        }
+
+        return redirect()->to($redirectUrl)
+            ->with('success', 'Ročník „' . trim($data['real_name']) . '“ byl uložen k závodu „' . $race['default_name'] . '“.');
     }
 }

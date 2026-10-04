@@ -4,10 +4,6 @@
     <h1 class="display-6 fw-bold mb-2">Paříž–Nice</h1>
     <p class="text-secondary mb-0">Všechny ročníky od nejnovějšího. Etapy, jejich vítězové a průběžné pořadí na jednom místě.</p>
 </header>
-<div class="d-flex flex-wrap gap-2 mb-4">
-    <span class="badge rounded-pill text-bg-primary px-3 py-2">Počet ročníků: <?= count($raceYears) ?></span>
-    <span class="badge rounded-pill bg-white border text-secondary px-3 py-2">Muži · Elite</span>
-</div>
 <?php if (empty($raceYears)): ?>
     <div class="alert alert-info">Pro závod Paříž–Nice zatím nejsou uložené žádné ročníky.</div>
 <?php endif; ?>
@@ -31,7 +27,7 @@
                     <?php if ($raceYear['total_distance'] !== null): ?>
                         <div class="h4 fw-bold mb-1"><?= number_format($raceYear['total_distance'], 0, ',', ' ') ?> <span class="fs-6 fw-normal text-secondary">km</span></div>
                     <?php endif; ?>
-                    <div class="small text-secondary">Celková délka · <?= count($raceYear['stages']) ?> etap</div>
+                    <div class="small text-secondary">Celková délka</div>
                 </div>
             </div>
         </div>
@@ -41,7 +37,6 @@
                     <tr>
                         <th scope="col" class="ps-4">Etapa</th>
                         <th scope="col">Datum</th>
-                        <th scope="col">Trasa</th>
                         <th scope="col">Délka</th>
                         <th scope="col">Převýšení</th>
                         <th scope="col">Typ etapy</th>
@@ -54,7 +49,6 @@
                         <tr>
                             <th scope="row" class="ps-4"><span class="badge text-bg-dark"><?= esc($stage['number'] ?? '') ?></span></th>
                             <td class="text-nowrap small"><?= $stage['date'] !== '0000-00-00' ? date('d. m. Y', strtotime($stage['date'])) : '' ?></td>
-                            <td class="small"><?= esc($stage['departure']) ?><?php if ($stage['departure'] != '' && $stage['arrival'] != ''): ?> → <?php endif; ?><?= esc($stage['arrival']) ?></td>
                             <td class="text-nowrap fw-semibold"><?= number_format((float) $stage['distance'], 1, ',', ' ') ?> km</td>
                             <td class="text-nowrap"><?= number_format((int) $stage['vertical_meters'], 0, ',', ' ') ?> m</td>
                             <td class="small">
@@ -73,7 +67,7 @@
                         </tr>
                     <?php endforeach; ?>
                     <?php if (empty($raceYear['stages'])): ?>
-                        <tr><td colspan="8" class="text-center text-secondary py-5">Tento ročník zatím nemá žádné etapy.</td></tr>
+                        <tr><td colspan="7" class="text-center text-secondary py-5">Tento ročník zatím nemá žádné etapy.</td></tr>
                     <?php endif; ?>
                 </tbody>
             </table>
