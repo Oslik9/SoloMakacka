@@ -23,12 +23,14 @@
                     <div class="text-primary fw-semibold small mb-1">ROČNÍK <?= esc($raceYear['year']) ?></div>
                     <h2 class="h4 fw-bold mb-2" id="nazev-<?= (int) $raceYear['id'] ?>"><?= esc($raceYear['real_name']) ?></h2>
                     <div class="text-secondary small">
-                        <?= $raceYear['start_date'] !== '0000-00-00' ? date('d. m. Y', strtotime($raceYear['start_date'])) : '–' ?> –
-                        <?= $raceYear['end_date'] !== '0000-00-00' ? date('d. m. Y', strtotime($raceYear['end_date'])) : '–' ?>
+                        <?= $raceYear['start_date'] !== '0000-00-00' ? date('d. m. Y', strtotime($raceYear['start_date'])) : '' ?> –
+                        <?= $raceYear['end_date'] !== '0000-00-00' ? date('d. m. Y', strtotime($raceYear['end_date'])) : '' ?>
                     </div>
                 </div>
                 <div class="text-md-end">
-                    <div class="h4 fw-bold mb-1"><?= number_format((float) $raceYear['total_distance'], 0, ',', ' ') ?> <span class="fs-6 fw-normal text-secondary">km</span></div>
+                    <?php if ($raceYear['total_distance'] !== null): ?>
+                        <div class="h4 fw-bold mb-1"><?= number_format($raceYear['total_distance'], 0, ',', ' ') ?> <span class="fs-6 fw-normal text-secondary">km</span></div>
+                    <?php endif; ?>
                     <div class="small text-secondary">Celková délka · <?= count($raceYear['stages']) ?> etap</div>
                 </div>
             </div>
@@ -50,18 +52,18 @@
                 <tbody>
                     <?php foreach ($raceYear['stages'] as $stage): ?>
                         <tr>
-                            <th scope="row" class="ps-4"><span class="badge text-bg-dark"><?= esc($stage['number'] ?? '–') ?></span></th>
-                            <td class="text-nowrap small"><?= $stage['date'] !== '0000-00-00' ? date('d. m. Y', strtotime($stage['date'])) : '–' ?></td>
-                            <td class="small"><?= esc($stage['departure'] ?: '–') ?> → <?= esc($stage['arrival'] ?: '–') ?></td>
+                            <th scope="row" class="ps-4"><span class="badge text-bg-dark"><?= esc($stage['number'] ?? '') ?></span></th>
+                            <td class="text-nowrap small"><?= $stage['date'] !== '0000-00-00' ? date('d. m. Y', strtotime($stage['date'])) : '' ?></td>
+                            <td class="small"><?= esc($stage['departure']) ?><?php if ($stage['departure'] != '' && $stage['arrival'] != ''): ?> → <?php endif; ?><?= esc($stage['arrival']) ?></td>
                             <td class="text-nowrap fw-semibold"><?= number_format((float) $stage['distance'], 1, ',', ' ') ?> km</td>
                             <td class="text-nowrap"><?= number_format((int) $stage['vertical_meters'], 0, ',', ' ') ?> m</td>
                             <td class="small">
-                                <?= esc($stage['stage_type'] ?? 'Neznámý') ?>
+                                <?= esc($stage['stage_type'] ?? '') ?>
                                 <?php if (in_array($stage['note'], ['ITT', 'TTT'], true)): ?>
                                     <span class="badge text-bg-secondary"><?= esc($stage['note']) ?></span>
                                 <?php endif; ?>
                             </td>
-                            <td class="fw-semibold small"><?= esc(trim($stage['winner_first_name'] . ' ' . $stage['winner_last_name']) ?: '–') ?></td>
+                            <td class="fw-semibold small"><?= esc(trim($stage['winner_first_name'] . ' ' . $stage['winner_last_name'])) ?></td>
                             <td class="pe-4">
                                 <div class="btn-group btn-group-sm text-nowrap" role="group" aria-label="Pořadí etapy">
                                     <a class="btn btn-outline-primary" href="<?= site_url('pariz-nice/stage/' . (int) $stage['id'] . '/results/1') ?>">V etapě</a>

@@ -26,7 +26,7 @@
                     </div>
                     <div class="mb-4">
                         <label class="form-label fw-semibold" for="year">Rok ročníku</label>
-                        <input type="number" class="form-control" id="year" name="year" min="1800" max="2200" value="<?= esc(old('year', '', false), 'attr') ?>" required>
+                        <input type="number" class="form-control" id="year" name="year" value="<?= esc(old('year', '', false), 'attr') ?>" required>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-4">

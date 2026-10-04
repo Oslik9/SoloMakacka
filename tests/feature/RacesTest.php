@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\RaceModel;
+use App\Models\RaceYearModel;
+use App\Models\StageModel;
 use CodeIgniter\Database\BaseConnection;
 use CodeIgniter\Test\CIUnitTestCase;
 use CodeIgniter\Test\FeatureTestTrait;
@@ -73,27 +75,25 @@ final class RacesTest extends CIUnitTestCase
         parent::tearDown();
     }
 
-    public function testYearsAreNewestFirstAndDistanceIsRounded(): void
+    public function testYearsAreNewestFirst(): void
     {
-        $years = (new RaceModel($this->raceDb))->getYearsForRace(124);
+        $years = (new RaceYearModel($this->raceDb))->getYearsForRace(124);
         $this->assertSame([2024, 2023], array_map('intval', array_column($years, 'year')));
-        $this->assertSame(51, (int) $years[0]['total_distance']);
-        $this->assertSame(0, (int) $years[1]['total_distance']);
     }
 
     public function testStagesAreOrderedAndWinnerComesFromStageResults(): void
     {
-        $stages = (new RaceModel($this->raceDb))->getStagesForYear(10);
+        $stages = (new StageModel($this->raceDb))->getStagesForYear(10);
         $this->assertSame([1, 2], array_map('intval', array_column($stages, 'number')));
         $this->assertSame('Vítěz', $stages[0]['winner_first_name']);
         $this->assertNull($stages[1]['winner_first_name']);
         $this->assertSame(0, (int) $stages[0]['vertical_meters']);
-        $this->assertNull((new RaceModel($this->raceDb))->getStageForRace(101, 125));
+        $this->assertNull((new StageModel($this->raceDb))->getStageForRace(101, 125));
     }
 
     public function testResultTypesAreSeparatedAndOrderedByRank(): void
     {
-        $model = new RaceModel($this->raceDb);
+        $model = new StageModel($this->raceDb);
         $stageResults = $model->getStageResults(101, 1);
         $this->assertSame([1, 2], array_map('intval', array_column($stageResults, 'rank')));
         $this->assertSame('Vítěz', $stageResults[0]['first_name']);
@@ -113,7 +113,7 @@ final class RacesTest extends CIUnitTestCase
 
     public function testYearCanBeInsertedWithoutTimestampColumns(): void
     {
-        $model = new RaceModel($this->raceDb);
+        $model = new RaceYearModel($this->raceDb);
         $id = $model->insert([
             'real_name' => 'Nový ročník', 'id_race' => 124, 'year' => 2025,
             'start_date' => '2025-03-01', 'end_date' => '2025-03-08', 'logo' => 'uploads/race-logos/test.png',
@@ -136,6 +136,12 @@ final class RacesTest extends CIUnitTestCase
         $this->assertStringContainsString('stage/101/results/1', $html);
         $this->assertStringContainsString('stage/101/results/4', $html);
         $this->assertStringContainsString('Tento ročník zatím nemá žádné etapy.', $html);
+        $document = new DOMDocument();
+        @$document->loadHTML('<?xml encoding="UTF-8">' . $html);
+        $xpath = new DOMXPath($document);
+        $this->assertSame('51 km', trim($xpath->query('//section[@id="rocnik-10"]//div[contains(@class,"h4")]')->item(0)->textContent));
+        $this->assertSame(0, $xpath->query('//section[@id="rocnik-11"]//div[contains(@class,"h4")]')->length);
+        $this->assertSame('', trim($xpath->query('//section[@id="rocnik-10"]//tbody/tr[2]/td[6]')->item(0)->textContent));
     }
 
     public function testFormShowsExpectedFieldsAndRaceOptions(): void
@@ -146,7 +152,7 @@ final class RacesTest extends CIUnitTestCase
         $document = new DOMDocument();
         @$document->loadHTML('<?xml encoding="UTF-8">' . $html);
         $xpath = new DOMXPath($document);
-        $this->assertSame('1800', $xpath->query('//input[@name="year"]')->item(0)->getAttribute('min'));
+        $this->assertSame('number', $xpath->query('//input[@name="year"]')->item(0)->getAttribute('type'));
         $this->assertFalse($xpath->query('//input[@name="start_date"]')->item(0)->hasAttribute('min'));
         $this->assertFalse($xpath->query('//input[@name="logo"]')->item(0)->hasAttribute('maxlength'));
         $this->assertSame(2, $xpath->query('//select[@name="race_id"]/option')->length);

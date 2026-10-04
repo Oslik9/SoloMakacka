@@ -4,8 +4,8 @@
 <header class="mb-4">
     <h1 class="display-6 fw-bold mb-2"><?= esc($title) ?></h1>
     <p class="text-secondary mb-0">
-        <?= esc($stage['real_name']) ?> · <?= esc($stage['year']) ?> · Etapa <?= esc($stage['number'] ?? '–') ?> ·
-        <?= $stage['date'] !== '0000-00-00' ? date('d. m. Y', strtotime($stage['date'])) : '–' ?>
+        <?= esc($stage['real_name']) ?> · <?= esc($stage['year']) ?> · Etapa <?= esc($stage['number'] ?? '') ?> ·
+        <?= $stage['date'] !== '0000-00-00' ? date('d. m. Y', strtotime($stage['date'])) : '' ?>
     </p>
 </header>
 <div class="btn-group btn-group-sm mb-4" role="group" aria-label="Pořadí etapy">
@@ -28,10 +28,10 @@
                 <?php foreach ($results as $result): ?>
                     <tr>
                         <th scope="row" class="ps-4"><?= esc($result['rank']) ?>.</th>
-                        <td class="fw-semibold"><?= esc(trim($result['first_name'] . ' ' . $result['last_name']) ?: '–') ?></td>
-                        <td><span class="badge text-bg-light border"><?= esc(strtoupper($result['country'] ?: '–')) ?></span></td>
-                        <td class="text-nowrap"><?= esc($result['time'] ?? '–') ?></td>
-                        <td class="text-secondary pe-4"><?= esc($result['note'] ?: '–') ?></td>
+                        <td class="fw-semibold"><?= esc(trim($result['first_name'] . ' ' . $result['last_name'])) ?></td>
+                        <td><span class="badge text-bg-light border"><?= esc(strtoupper($result['country'] ?? '')) ?></span></td>
+                        <td class="text-nowrap"><?= esc($result['time'] ?? '') ?></td>
+                        <td class="text-secondary pe-4"><?= esc($result['note']) ?></td>
                     </tr>
                 <?php endforeach; ?>
                 <?php if (empty($results)): ?>

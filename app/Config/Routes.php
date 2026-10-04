@@ -17,11 +17,11 @@ $routes->get(
 
 $routes->get(
     'race-years/create',
-    'ParisNice::create'
+    'RaceYears::create'
 );
 
 $routes->post(
     'race-years',
-    'ParisNice::store',
+    'RaceYears::store',
     ['filter' => 'csrf']
 );
