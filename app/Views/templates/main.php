@@ -16,10 +16,10 @@
         <div class="collapse navbar-collapse" id="mainNavbar">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link <?= url_is('pariz-nice*') ? 'active' : '' ?>" href="<?= site_url('pariz-nice') ?>" <?= url_is('pariz-nice*') ? 'aria-current="page"' : '' ?>>Paříž–Nice</a>
+                    <a class="nav-link <?= url_is('pariz-nice*') ? 'active' : '' ?>" href="<?= base_url('pariz-nice') ?>" <?= url_is('pariz-nice*') ? 'aria-current="page"' : '' ?>>Paříž–Nice</a>
                 </li>
             </ul>
-            <a class="btn <?= url_is('race-years/create') ? 'btn-light' : 'btn-outline-light' ?> mt-3 mt-md-0" href="<?= site_url('race-years/create') ?>" <?= url_is('race-years/create') ? 'aria-current="page"' : '' ?>>+ Přidat ročník</a>
+            <a class="btn <?= url_is('race-years/create') ? 'btn-light' : 'btn-outline-light' ?> mt-3 mt-md-0" href="<?= base_url('race-years/create') ?>" <?= url_is('race-years/create') ? 'aria-current="page"' : '' ?>>+ Přidat ročník</a>
         </div>
     </div>
 </nav>

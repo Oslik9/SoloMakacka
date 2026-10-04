@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="222" viewBox="0 0 1000 222" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <title>Týdenní tréninkový plán</title>
+  <rect width="1000" height="222" rx="12" fill="#fcfcfb"/>
+  <text x="8" y="26" fill="#0b0b0b" font-size="18" font-weight="700">Týden SOLO MAKAČKY</text>
+  <g font-size="13" fill="#52514e">
+    <rect x="700" y="15" width="12" height="12" rx="3" fill="#2a78d6"/><text x="718" y="26">Posilovna</text>
+    <rect x="800" y="15" width="12" height="12" rx="3" fill="#1baf7a"/><text x="818" y="26">Pohyb</text>
+    <rect x="880" y="15" width="12" height="12" rx="3" fill="#8a8984"/><text x="898" y="26">Odpočinek</text>
+  </g>
+  <g>
+    <rect x="4" y="40" width="132" height="170" rx="10" fill="#ffffff" stroke="#e4e3df" stroke-width="1.5"/>
+    <rect x="4" y="40" width="132" height="8" rx="4" fill="#2a78d6"/>
+    <text x="70" y="88" text-anchor="middle" fill="#52514e" font-size="18" font-weight="700">PO</text>
+    <text x="70" y="128" text-anchor="middle" fill="#0b0b0b" font-size="20" font-weight="700">Tlaky</text>
+    <text x="70" y="160" text-anchor="middle" fill="#52514e" font-size="14">Prsa ·</text><text x="70" y="180" text-anchor="middle" fill="#52514e" font-size="14">ramena ·</text><text x="70" y="200" text-anchor="middle" fill="#52514e" font-size="14">triceps</text>
+  </g>
+<g>
+    <rect x="146" y="40" width="132" height="170" rx="10" fill="#ffffff" stroke="#e4e3df" stroke-width="1.5"/>
+    <rect x="146" y="40" width="132" height="8" rx="4" fill="#2a78d6"/>
+    <text x="212" y="88" text-anchor="middle" fill="#52514e" font-size="18" font-weight="700">ÚT</text>
+    <text x="212" y="128" text-anchor="middle" fill="#0b0b0b" font-size="20" font-weight="700">Tahy</text>
+    <text x="212" y="160" text-anchor="middle" fill="#52514e" font-size="14">Záda ·</text><text x="212" y="180" text-anchor="middle" fill="#52514e" font-size="14">biceps</text>
+  </g>
+<g>
+    <rect x="288" y="40" width="132" height="170" rx="10" fill="#ffffff" stroke="#e4e3df" stroke-width="1.5"/>
+    <rect x="288" y="40" width="132" height="8" rx="4" fill="#1baf7a"/>
+    <text x="354" y="88" text-anchor="middle" fill="#52514e" font-size="18" font-weight="700">ST</text>
+    <text x="354" y="128" text-anchor="middle" fill="#0b0b0b" font-size="20" font-weight="700">Kardio</text>
+    <text x="354" y="160" text-anchor="middle" fill="#52514e" font-size="14">30–40 min</text><text x="354" y="180" text-anchor="middle" fill="#52514e" font-size="14">chůze/kolo</text>
+  </g>
+<g>
+    <rect x="430" y="40" width="132" height="170" rx="10" fill="#ffffff" stroke="#e4e3df" stroke-width="1.5"/>
+    <rect x="430" y="40" width="132" height="8" rx="4" fill="#2a78d6"/>
+    <text x="496" y="88" text-anchor="middle" fill="#52514e" font-size="18" font-weight="700">ČT</text>
+    <text x="496" y="128" text-anchor="middle" fill="#0b0b0b" font-size="20" font-weight="700">Nohy</text>
+    <text x="496" y="160" text-anchor="middle" fill="#52514e" font-size="14">Dřepy ·</text><text x="496" y="180" text-anchor="middle" fill="#52514e" font-size="14">výpady ·</text><text x="496" y="200" text-anchor="middle" fill="#52514e" font-size="14">lýtka</text>
+  </g>
+<g>
+    <rect x="572" y="40" width="132" height="170" rx="10" fill="#ffffff" stroke="#e4e3df" stroke-width="1.5"/>
+    <rect x="572" y="40" width="132" height="8" rx="4" fill="#2a78d6"/>
+    <text x="638" y="88" text-anchor="middle" fill="#52514e" font-size="18" font-weight="700">PÁ</text>
+    <text x="638" y="128" text-anchor="middle" fill="#0b0b0b" font-size="20" font-weight="700">Celé tělo</text>
+    <text x="638" y="160" text-anchor="middle" fill="#52514e" font-size="14">Lehčí trénink</text><text x="638" y="180" text-anchor="middle" fill="#52514e" font-size="14">+ břicho</text>
+  </g>
+<g>
+    <rect x="714" y="40" width="132" height="170" rx="10" fill="#ffffff" stroke="#e4e3df" stroke-width="1.5"/>
+    <rect x="714" y="40" width="132" height="8" rx="4" fill="#1baf7a"/>
+    <text x="780" y="88" text-anchor="middle" fill="#52514e" font-size="18" font-weight="700">SO</text>
+    <text x="780" y="128" text-anchor="middle" fill="#0b0b0b" font-size="20" font-weight="700">Aktivně</text>
+    <text x="780" y="160" text-anchor="middle" fill="#52514e" font-size="14">Výlet, fotbal,</text><text x="780" y="180" text-anchor="middle" fill="#52514e" font-size="14">plavání</text>
+  </g>
+<g>
+    <rect x="856" y="40" width="132" height="170" rx="10" fill="#ffffff" stroke="#e4e3df" stroke-width="1.5"/>
+    <rect x="856" y="40" width="132" height="8" rx="4" fill="#8a8984"/>
+    <text x="922" y="88" text-anchor="middle" fill="#52514e" font-size="18" font-weight="700">NE</text>
+    <text x="922" y="128" text-anchor="middle" fill="#0b0b0b" font-size="20" font-weight="700">Volno</text>
+    <text x="922" y="160" text-anchor="middle" fill="#52514e" font-size="14">Spánek a</text><text x="922" y="180" text-anchor="middle" fill="#52514e" font-size="14">svíčková</text>
+  </g>
+
+</svg>

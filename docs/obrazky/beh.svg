@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="386" viewBox="0 0 1000 386" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <title>Kolik minut běhu stojí oblíbená jídla</title>
+  <rect width="1000" height="386" rx="12" fill="#fcfcfb"/>
+  <text x="20" y="34" fill="#0b0b0b" font-size="20" font-weight="700">Kolik minut běhu tě stojí…</text>
+  <text x="20" y="56" fill="#52514e" font-size="14">Běh 10 km/h, člověk s váhou 80 kg (≈ 14 kcal za minutu)</text>
+  <line x1="270" y1="60" x2="270" y2="330" stroke="#e4e3df" stroke-width="1"/>
+  <text x="270" y="350" text-anchor="middle" fill="#8a8984" font-size="13">0 min</text>
+<line x1="456.66666666666663" y1="60" x2="456.66666666666663" y2="330" stroke="#e4e3df" stroke-width="1"/>
+  <text x="456.66666666666663" y="350" text-anchor="middle" fill="#8a8984" font-size="13">30 min</text>
+<line x1="643.3333333333333" y1="60" x2="643.3333333333333" y2="330" stroke="#e4e3df" stroke-width="1"/>
+  <text x="643.3333333333333" y="350" text-anchor="middle" fill="#8a8984" font-size="13">60 min</text>
+<line x1="830" y1="60" x2="830" y2="330" stroke="#e4e3df" stroke-width="1"/>
+  <text x="830" y="350" text-anchor="middle" fill="#8a8984" font-size="13">90 min</text>
+<text x="258" y="86" text-anchor="end" fill="#0b0b0b" font-size="15">Smažák, hranolky, tatarka</text>
+  <path d="M270 70 h531.1 a4 4 0 0 1 4 4 v14 a4 4 0 0 1 -4 4 h-531.1 z" fill="#2a78d6"><title>Smažák, hranolky, tatarka: 1200 kcal ≈ 86 min běhu</title></path>
+  <text x="813.1" y="86" fill="#52514e" font-size="14"><tspan font-weight="700" fill="#0b0b0b">86 min</tspan>  ·  1200 kcal</text>
+<text x="258" y="124" text-anchor="end" fill="#0b0b0b" font-size="15">Celá pizza</text>
+  <path d="M270 108 h437.8 a4 4 0 0 1 4 4 v14 a4 4 0 0 1 -4 4 h-437.8 z" fill="#2a78d6"><title>Celá pizza: 1000 kcal ≈ 71 min běhu</title></path>
+  <text x="719.8" y="124" fill="#52514e" font-size="14"><tspan font-weight="700" fill="#0b0b0b">71 min</tspan>  ·  1000 kcal</text>
+<text x="258" y="162" text-anchor="end" fill="#0b0b0b" font-size="15">Svíčková se 6 knedlíky</text>
+  <path d="M270 146 h419.1 a4 4 0 0 1 4 4 v14 a4 4 0 0 1 -4 4 h-419.1 z" fill="#2a78d6"><title>Svíčková se 6 knedlíky: 950 kcal ≈ 68 min běhu</title></path>
+  <text x="701.1" y="162" fill="#52514e" font-size="14"><tspan font-weight="700" fill="#0b0b0b">68 min</tspan>  ·  950 kcal</text>
+<text x="258" y="200" text-anchor="end" fill="#0b0b0b" font-size="15">Kebab v tortille</text>
+  <path d="M270 184 h375.6 a4 4 0 0 1 4 4 v14 a4 4 0 0 1 -4 4 h-375.6 z" fill="#2a78d6"><title>Kebab v tortille: 850 kcal ≈ 61 min běhu</title></path>
+  <text x="657.6" y="200" fill="#52514e" font-size="14"><tspan font-weight="700" fill="#0b0b0b">61 min</tspan>  ·  850 kcal</text>
+<text x="258" y="238" text-anchor="end" fill="#0b0b0b" font-size="15">3 piva (12°, 0,5 l)</text>
+  <path d="M270 222 h282.2 a4 4 0 0 1 4 4 v14 a4 4 0 0 1 -4 4 h-282.2 z" fill="#2a78d6"><title>3 piva (12°, 0,5 l): 645 kcal ≈ 46 min běhu</title></path>
+  <text x="564.2" y="238" fill="#52514e" font-size="14"><tspan font-weight="700" fill="#0b0b0b">46 min</tspan>  ·  645 kcal</text>
+<text x="258" y="276" text-anchor="end" fill="#0b0b0b" font-size="15">Čokoládová oplatka 50 g</text>
+  <path d="M270 260 h114.2 a4 4 0 0 1 4 4 v14 a4 4 0 0 1 -4 4 h-114.2 z" fill="#2a78d6"><title>Čokoládová oplatka 50 g: 260 kcal ≈ 19 min běhu</title></path>
+  <text x="396.2" y="276" fill="#52514e" font-size="14"><tspan font-weight="700" fill="#0b0b0b">19 min</tspan>  ·  260 kcal</text>
+<text x="258" y="314" text-anchor="end" fill="#0b0b0b" font-size="15">1 pivo (12°, 0,5 l)</text>
+  <path d="M270 298 h89.3 a4 4 0 0 1 4 4 v14 a4 4 0 0 1 -4 4 h-89.3 z" fill="#2a78d6"><title>1 pivo (12°, 0,5 l): 215 kcal ≈ 15 min běhu</title></path>
+  <text x="371.3" y="314" fill="#52514e" font-size="14"><tspan font-weight="700" fill="#0b0b0b">15 min</tspan>  ·  215 kcal</text>
+
+</svg>

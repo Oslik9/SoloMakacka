@@ -1,6 +1,6 @@
 <?= $this->extend('templates/main') ?>
 <?= $this->section('content') ?>
-<a class="btn btn-outline-secondary btn-sm mb-4" href="<?= site_url('pariz-nice') ?>#rocnik-<?= (int) $stage['id_race_year'] ?>">← Zpět na ročník</a>
+<a class="btn btn-outline-secondary btn-sm mb-4" href="<?= base_url('pariz-nice') ?>#rocnik-<?= (int) $stage['id_race_year'] ?>">← Zpět na ročník</a>
 <header class="mb-4">
     <h1 class="display-6 fw-bold mb-2"><?= esc($title) ?></h1>
     <p class="text-secondary mb-0">
@@ -9,8 +9,8 @@
     </p>
 </header>
 <div class="btn-group btn-group-sm mb-4" role="group" aria-label="Pořadí etapy">
-    <a class="btn <?= $typeResult === 1 ? 'btn-primary' : 'btn-outline-primary' ?>" href="<?= site_url('pariz-nice/stage/' . (int) $stage['id'] . '/results/1') ?>" <?= $typeResult === 1 ? 'aria-current="page"' : '' ?>>V etapě</a>
-    <a class="btn <?= $typeResult === 4 ? 'btn-primary' : 'btn-outline-primary' ?>" href="<?= site_url('pariz-nice/stage/' . (int) $stage['id'] . '/results/4') ?>" <?= $typeResult === 4 ? 'aria-current="page"' : '' ?>>Po etapě</a>
+    <a class="btn <?= $typeResult === 1 ? 'btn-primary' : 'btn-outline-primary' ?>" href="<?= base_url('pariz-nice/stage/' . (int) $stage['id'] . '/results/1') ?>" <?= $typeResult === 1 ? 'aria-current="page"' : '' ?>>V etapě</a>
+    <a class="btn <?= $typeResult === 4 ? 'btn-primary' : 'btn-outline-primary' ?>" href="<?= base_url('pariz-nice/stage/' . (int) $stage['id'] . '/results/4') ?>" <?= $typeResult === 4 ? 'aria-current="page"' : '' ?>>Po etapě</a>
 </div>
 <div class="card border-0 shadow-sm overflow-hidden">
     <div class="table-responsive">

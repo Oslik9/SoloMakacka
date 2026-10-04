@@ -8,7 +8,7 @@
         </header>
         <div class="card border-0 shadow-sm">
             <div class="card-body p-4 p-lg-5">
-                <form action="<?= site_url('race-years') ?>" method="post" enctype="multipart/form-data">
+                <form action="<?= base_url('race-years') ?>" method="post" enctype="multipart/form-data">
                     <?= csrf_field() ?>
                     <div class="mb-4">
                         <label class="form-label fw-semibold" for="real_name">Název ročníku</label>
@@ -47,7 +47,7 @@
                         <div class="alert alert-info">V databázi nejsou žádné mužské závody kategorie E.</div>
                     <?php endif; ?>
                     <div class="d-flex flex-wrap justify-content-end gap-2 border-top pt-4">
-                        <a href="<?= site_url('pariz-nice') ?>" class="btn btn-outline-secondary">Zrušit</a>
+                        <a href="<?= base_url('pariz-nice') ?>" class="btn btn-outline-secondary">Zrušit</a>
                         <button type="submit" class="btn btn-primary" <?= empty($races) ? 'disabled' : '' ?>>Uložit ročník</button>
                     </div>
                 </form>

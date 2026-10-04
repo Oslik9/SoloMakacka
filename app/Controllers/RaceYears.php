@@ -39,17 +39,17 @@ class RaceYears extends BaseController
         }
 
         if (!$this->validateData($data, $rules)) {
-            return redirect()->to(site_url('race-years/create'))->withInput();
+            return redirect()->to(base_url('race-years/create'))->withInput();
         }
         if ($data['end_date'] < $data['start_date']) {
-            return redirect()->to(site_url('race-years/create'))->withInput()
+            return redirect()->to(base_url('race-years/create'))->withInput()
                 ->with('error', 'Datum do nesmí být před datem od.');
         }
 
         $model = new RaceModel();
         $race = $model->getMaleCategoryERace($data['race_id']);
         if (!$race) {
-            return redirect()->to(site_url('race-years/create'))->withInput()
+            return redirect()->to(base_url('race-years/create'))->withInput()
                 ->with('error', 'Vyberte mužský závod kategorie E.');
         }
 
@@ -78,13 +78,13 @@ class RaceYears extends BaseController
             if ($logoName !== null) {
                 unlink(FCPATH . 'uploads/race-logos/' . $logoName);
             }
-            return redirect()->to(site_url('race-years/create'))->withInput()
+            return redirect()->to(base_url('race-years/create'))->withInput()
                 ->with('error', 'Ročník se nepodařilo uložit. Zkontrolujte údaje a zkuste to znovu.');
         }
 
-        $redirectUrl = site_url('race-years/create');
+        $redirectUrl = base_url('race-years/create');
         if ($race['id'] == 124) {
-            $redirectUrl = site_url('pariz-nice') . '#rocnik-' . $id;
+            $redirectUrl = base_url('pariz-nice') . '#rocnik-' . $id;
         }
 
         return redirect()->to($redirectUrl)

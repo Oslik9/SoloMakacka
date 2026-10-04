@@ -60,8 +60,8 @@
                             <td class="fw-semibold small"><?= esc(trim($stage['winner_first_name'] . ' ' . $stage['winner_last_name'])) ?></td>
                             <td class="pe-4">
                                 <div class="btn-group btn-group-sm text-nowrap" role="group" aria-label="Pořadí etapy">
-                                    <a class="btn btn-outline-primary" href="<?= site_url('pariz-nice/stage/' . (int) $stage['id'] . '/results/1') ?>">V etapě</a>
-                                    <a class="btn btn-outline-primary" href="<?= site_url('pariz-nice/stage/' . (int) $stage['id'] . '/results/4') ?>">Po etapě</a>
+                                    <a class="btn btn-outline-primary" href="<?= base_url('pariz-nice/stage/' . (int) $stage['id'] . '/results/1') ?>">V etapě</a>
+                                    <a class="btn btn-outline-primary" href="<?= base_url('pariz-nice/stage/' . (int) $stage['id'] . '/results/4') ?>">Po etapě</a>
                                 </div>
                             </td>
                         </tr>
