@@ -1,3 +1,4 @@
+<?php // Formulář vložíme do sekce content společné šablony. ?>
 <?= $this->extend('templates/main') ?>
 <?= $this->section('content') ?>
 <div class="row justify-content-center">
@@ -8,22 +9,27 @@
         </header>
         <div class="card border-0 shadow-sm">
             <div class="card-body p-4 p-lg-5">
+<?php // POST odesílá údaje pro uložení; multipart/form-data umožňuje přiložit soubor loga. ?>
                 <form action="<?= base_url('race-years') ?>" method="post" enctype="multipart/form-data">
+<?php // Skryté pole s ochranným tokenem ověřuje filtr csrf nastavený v routě pro POST. ?>
                     <?= csrf_field() ?>
                     <div class="mb-4">
                         <label class="form-label fw-semibold" for="real_name">Název ročníku</label>
+<?php // old() obnoví hodnotu po chybě formuláře; false vypne jeho escapování, které provádí esc(). ?>
                         <input class="form-control" id="real_name" name="real_name" maxlength="255" value="<?= esc(old('real_name', '', false), 'attr') ?>" required>
                     </div>
                     <div class="mb-4">
                         <label class="form-label fw-semibold" for="race_id">Závod</label>
                         <select class="form-select" id="race_id" name="race_id" aria-describedby="race-help" required>
                             <option value="">Vyberte závod</option>
+<?php // Model dodal pouze povolené závody; selected obnoví původní výběr po chybě. ?>
                             <?php foreach ($races as $race): ?>
                                 <option value="<?= (int) $race['id'] ?>" <?= (string) old('race_id', '') === (string) $race['id'] ? 'selected' : '' ?>><?= esc($race['default_name']) ?></option>
                             <?php endforeach; ?>
                         </select>
                         <div class="form-text" id="race-help">Pouze mužské závody kategorie E (Elite).</div>
                     </div>
+<?php // Rok a datum od–do vyžaduje tabulka race_year jako povinné sloupce bez výchozí hodnoty. ?>
                     <div class="mb-4">
                         <label class="form-label fw-semibold" for="year">Rok ročníku</label>
                         <input type="number" class="form-control" id="year" name="year" value="<?= esc(old('year', '', false), 'attr') ?>" required>
@@ -40,9 +46,11 @@
                     </div>
                     <div class="mb-4">
                         <label class="form-label fw-semibold" for="logo">Logo závodu (nepovinné)</label>
+<?php // accept pomáhá s výběrem souboru; skutečný typ a velikost kontroluje controller. ?>
                         <input type="file" class="form-control" id="logo" name="logo" accept=".png,.jpg,.jpeg,.webp,.gif" aria-describedby="logo-help">
                         <div class="form-text" id="logo-help">PNG, JPG, WebP nebo GIF, nejvýše 2 MB. Ročník můžete přidat i bez loga.</div>
                     </div>
+<?php // Bez povolených závodů zobrazíme zprávu a níže zakážeme tlačítko pro odeslání. ?>
                     <?php if (empty($races)): ?>
                         <div class="alert alert-info">V databázi nejsou žádné mužské závody kategorie E.</div>
                     <?php endif; ?>
