@@ -42,8 +42,9 @@ class StageModel extends Model
         // Vazba vede přes ročník: stage.id_race_year = race_year.id, race_year.id_race = ID závodu.
         // $this->db je připojení modelu, table() připraví dotaz a return vrátí výsledek celého řetězce.
         return $this->db->table('stage')
-            ->select('stage.*, race_year.real_name, race_year.year') // select() vybere všechny sloupce etapy a název a rok jejího ročníku.
+            ->select('stage.*, race_year.real_name, race_year.year, parcour_type.name AS stage_type') // select() vybere údaje etapy, jejího ročníku a název typu pod klíčem stage_type.
             ->join('race_year', 'race_year.id = stage.id_race_year') // join() připojí ročník etapy; bez odpovídajícího ročníku se etapa nevrátí.
+            ->join('parcour_type', 'parcour_type.id = stage.parcour_type', 'left') // LEFT JOIN doplní typ etapy a ponechá etapu i při chybějícím typu.
             ->where('stage.id', $stageId) // where() omezí dotaz na konkrétní ID etapy.
             ->where('race_year.id_race', $raceId) // Další podmínka ověří, že její ročník patří do požadovaného závodu.
             ->get()->getRowArray(); // get() provede SELECT; getRowArray() vrátí první řádek jako asociativní pole, nebo null bez shody.
@@ -57,7 +58,7 @@ class StageModel extends Model
         // $this->db použije připojení modelu a table('result') připraví dotaz nad výsledky.
         // return vrátí všechny řádky až po dokončení celého řetězce metod.
         return $this->db->table('result')
-            ->select('result.rank, result.time, rider.first_name, rider.last_name') // select() vybere umístění, čas a jméno jezdce.
+            ->select('result.rank, result.time, rider.first_name, rider.last_name, rider.country') // select() vybere umístění, čas, jméno a kód země jezdce pro jeho vlajku.
             ->join('rider', 'rider.id = result.id_rider', 'left') // LEFT JOIN doplní údaje jezdce, ale zachová i výsledek bez odpovídajícího jezdce.
             ->where('result.id_stage', $stageId) // where() ponechá výsledky pouze pro zadanou etapu.
             ->where('result.type_result', $typeResult) // Přidá podmínku požadovaného typu pořadí, aby se různé typy nemíchaly.

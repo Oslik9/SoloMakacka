@@ -1,108 +1,100 @@
-<?php
+<?php // Controller pro formulář a ukládání ročníků.
 
-namespace App\Controllers;
+namespace App\Controllers; // Prostor jmen controllerů aplikace.
 
-use App\Models\RaceModel;
-use App\Models\RaceYearModel;
+use App\Models\RaceModel; // Model pro výběr a kontrolu závodů.
+use App\Models\RaceYearModel; // Model tabulky race_year.
 
-class RaceYears extends BaseController
+class RaceYears extends BaseController // Zdědí společné helpery a metody CI4.
 {
-    // Zobrazí formulář a načte mužské závody kategorie E do dropdownu.
-    public function create()
+    // Zobrazí formulář; při chybě dostane také chyby a původní hodnoty.
+    public function create($errors = [], $values = [])
     {
-        $model = new RaceModel();
-        $data['title'] = 'Přidat ročník závodu';
-        $data['races'] = $model->getMaleCategoryERaces();
+        $model = new RaceModel(); // Vytvoří model závodů.
+        $data['title'] = 'Přidat ročník závodu'; // Nadpis stránky.
+        $data['races'] = $model->getMaleCategoryERaces(); // Povolené závody pro dropdown.
+        $data['errors'] = $errors; // Chyby předáme přímo do view.
+        $data['values'] = $values; // Původní hodnoty formuláře předáme přímo do view.
 
-        return view('races/create_year', $data);
+        foreach ($data['values'] as $field => $value) { // Projde hodnoty vracené do formuláře.
+            if (is_array($value)) { // Formulářová pole očekávají jednu hodnotu, ne pole.
+                $data['values'][$field] = ''; // Nepovolené pole hodnot nezobrazíme.
+            }
+        }
+
+        return view('races/create_year', $data); // Vykreslí formulář s připravenými daty.
     }
 
-    // Zkontroluje odeslaný formulář, uloží ročník a případné logo a přesměruje uživatele.
+    // Zkontroluje POST data, uloží ročník a zobrazí potvrzení.
     public function store()
     {
-        // getPost() čte hodnoty podle názvů polí odeslaných metodou POST.
-        $data = [
-            'real_name' => $this->request->getPost('real_name'),
-            'race_id' => $this->request->getPost('race_id'),
-            'year' => $this->request->getPost('year'),
-            'start_date' => $this->request->getPost('start_date'),
-            'end_date' => $this->request->getPost('end_date'),
-        ];
-        // Pravidla CI4 kontrolují povinné hodnoty, délku názvu a správný formát dat.
-        $rules = [
-            'real_name' => 'required|max_length[255]',
-            'race_id' => 'required|is_natural',
-            'year' => 'required|integer',
-            'start_date' => 'required|valid_date[Y-m-d]',
-            'end_date' => 'required|valid_date[Y-m-d]',
+        $values = [ // getPost() načte hodnoty odeslaných polí.
+            'real_name' => $this->request->getPost('real_name'), // Název ročníku.
+            'race_id' => $this->request->getPost('race_id'), // ID závodu z dropdownu.
+            'year' => $this->request->getPost('year'), // Rok ročníku.
+            'start_date' => $this->request->getPost('start_date'), // Datum od.
+            'end_date' => $this->request->getPost('end_date'), // Datum do.
         ];
 
-        // Logo je nepovinné, takže jeho velikost a typ kontrolujeme jen při výběru souboru.
-        $logo = $this->request->getFile('logo');
-        if ($logo && $logo->getName() != '') {
-            $rules['logo'] = 'uploaded[logo]|max_size[logo,2048]|is_image[logo]|mime_in[logo,image/png,image/jpeg,image/webp,image/gif]|ext_in[logo,png,jpg,jpeg,webp,gif]';
+        $rules = [ // Běžná validační pravidla CI4.
+            'real_name' => 'required|max_length[255]', // Povinný název do 255 znaků.
+            'race_id' => 'required|is_natural', // Povinné nezáporné celé číslo.
+            'year' => 'required|integer', // Povinný rok jako celé číslo.
+            'start_date' => 'required|valid_date[Y-m-d]', // Platné datum začátku.
+            'end_date' => 'required|valid_date[Y-m-d]', // Platné datum konce.
+        ];
+
+        $logo = $this->request->getFile('logo'); // Načte nahrávaný soubor.
+        $hasLogo = $logo && $logo->getName() != ''; // Zjistí, zda byl obrázek vybrán.
+        if ($hasLogo) { // Nepovinné logo kontrolujeme jen při nahrání.
+            $rules['logo'] = 'uploaded[logo]|max_size[logo,2048]|is_image[logo]|mime_in[logo,image/png,image/jpeg,image/webp,image/gif]|ext_in[logo,png,jpg,jpeg,webp,gif]'; // Obrázek povoleného typu do 2 MB.
         }
 
-        // withInput() zachová vyplněné údaje a chyby pro opětovné zobrazení formuláře.
-        if (!$this->validateData($data, $rules)) {
-            return redirect()->to(base_url('race-years/create'))->withInput();
+        if (!$this->validateData($values, $rules)) { // Ověří formulář pomocí pravidel CI4.
+            return $this->create($this->validator->getErrors(), $values); // Znovu zobrazí formulář s chybami a hodnotami.
         }
-        // U ověřeného formátu Y-m-d lze pořadí dat porovnat přímo jako řetězce.
-        if ($data['end_date'] < $data['start_date']) {
-            return redirect()->to(base_url('race-years/create'))->withInput()
-                ->with('error', 'Datum do nesmí být před datem od.');
+        if ($values['end_date'] < $values['start_date']) { // Ve formátu Y-m-d lze porovnat pořadí dat.
+            return $this->create(['Datum do nesmí být před datem od.'], $values); // Zobrazí chybu přímo u formuláře.
         }
 
-        $model = new RaceModel();
-        // Výběr ověříme i na serveru, protože hodnotu dropdownu lze v požadavku změnit.
-        $race = $model->getMaleCategoryERace($data['race_id']);
-        if (!$race) {
-            return redirect()->to(base_url('race-years/create'))->withInput()
-                ->with('error', 'Vyberte mužský závod kategorie E.');
+        $raceModel = new RaceModel(); // Připraví model závodů.
+        $race = $raceModel->getMaleCategoryERace($values['race_id']); // Ověří mužský závod kategorie E i na serveru.
+        if (!$race) { // Neexistující nebo nepovolený závod nelze použít.
+            return $this->create(['Vyberte mužský závod kategorie E.'], $values); // Zachová hodnoty a vypíše chybu.
         }
 
-        // Bez obrázku se do databáze uloží SQL NULL.
-        $logoName = null;
-        if ($logo && $logo->isValid()) {
-            // Náhodný název zabrání přepsání jiného loga se stejným původním názvem.
-            $logoName = $logo->getRandomName();
-            $logo->move(FCPATH . 'uploads/race-logos', $logoName);
+        $logoName = null; // Bez loga se uloží skutečné SQL NULL.
+        if ($hasLogo) { // Soubor již prošel validací.
+            $logoName = $logo->getRandomName(); // Připraví vlastní název, aby se loga nepřepisovala.
+            $logo->move(FCPATH . 'uploads/race-logos', $logoName); // Uloží logo do místní složky.
         }
 
-        $yearModel = new RaceYearModel();
-        // Pole race_id z formuláře patří do sloupce id_race; insert() vrátí ID nového ročníku.
-        $id = $yearModel->insert([
-            'real_name' => trim($data['real_name']),
-            'id_race' => $data['race_id'],
-            'year' => $data['year'],
-            'start_date' => $data['start_date'],
-            'end_date' => $data['end_date'],
-            'logo' => $logoName,
-            // Povinné údaje odpovídají povolené kategorii; zemi převezmeme z vybraného závodu.
-            'sex' => 'M',
-            'category' => 'E',
-            'country' => $race['country'],
-            // V databázi se 0 používá pro neuvedenou UCI tour.
-            'uci_tour' => 0,
+        $yearModel = new RaceYearModel(); // Vytvoří model ročníků.
+        $id = $yearModel->insert([ // Vloží nový záznam a vrátí jeho ID.
+            'real_name' => trim($values['real_name']), // Odstraní krajní mezery názvu.
+            'id_race' => $values['race_id'], // race_id z formuláře patří do sloupce id_race.
+            'year' => $values['year'], // Uloží rok.
+            'start_date' => $values['start_date'], // Uloží datum od.
+            'end_date' => $values['end_date'], // Uloží datum do.
+            'logo' => $logoName, // Název souboru nebo NULL.
+            'sex' => 'M', // Mužský ročník.
+            'category' => 'E', // Kategorie Elite.
+            'country' => $race['country'], // Země vybraného závodu.
+            'uci_tour' => 0, // Databáze používá 0 pro neuvedenou UCI tour.
         ]);
 
-        // Pokud insert() vrátí neúspěch, odstraníme případné logo, aby nezůstalo bez ročníku.
-        if (!$id) {
-            if ($logoName !== null) {
-                unlink(FCPATH . 'uploads/race-logos/' . $logoName);
+        if (!$id) { // Pokud insert() vrátí neúspěch, ročník se neuložil.
+            if ($logoName !== null) { // Odstraní pouze případné logo tohoto pokusu.
+                unlink(FCPATH . 'uploads/race-logos/' . $logoName); // Soubor bez ročníku nezůstane na disku.
             }
-            return redirect()->to(base_url('race-years/create'))->withInput()
-                ->with('error', 'Ročník se nepodařilo uložit. Zkontrolujte údaje a zkuste to znovu.');
+            return $this->create(['Ročník se nepodařilo uložit.'], $values); // Znovu zobrazí formulář.
         }
 
-        // U Paříž–Nice otevřeme nový ročník přes jeho HTML kotvu, jinak se vrátíme na formulář.
-        $redirectUrl = base_url('race-years/create');
-        if ($race['id'] == 124) {
-            $redirectUrl = base_url('pariz-nice') . '#rocnik-' . $id;
+        session()->setFlashdata('success', 'Ročník „' . trim($values['real_name']) . '“ byl uložen k závodu „' . $race['default_name'] . '“.'); // Zpráva pro následující stránku.
+        if ($race['id'] == 124) { // Nový ročník Paříž–Nice se zobrazí v jeho přehledu.
+            return redirect()->to(base_url('pariz-nice') . '#rocnik-' . $id); // Otevře přímo kartu nového ročníku.
         }
 
-        // Zprávu success zobrazí společná šablona po přesměrování.
-        return redirect()->to($redirectUrl)
-            ->with('success', 'Ročník „' . trim($data['real_name']) . '“ byl uložen k závodu „' . $race['default_name'] . '“.');
+        return redirect()->to(base_url('race-years/create')); // U ostatních závodů se vrátí na formulář s potvrzením.
     }
 }

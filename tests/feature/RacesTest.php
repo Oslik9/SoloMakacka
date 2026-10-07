@@ -180,13 +180,83 @@ final class RacesTest extends CIUnitTestCase
 
     public function testResultPagesAndMissingResults(): void
     {
-        $this->get('/pariz-nice/stage/101/results/1')->assertStatus(200);
+        $stage = $this->get('/pariz-nice/stage/101/results/1');
+        $stage->assertStatus(200);
+        $stageHtml = $stage->response()->getBody();
+        $this->assertStringContainsString('fi-fr', $stageHtml);
+        $this->assertStringContainsString('&lt;script&gt;etapy&lt;/script&gt;', $stageHtml);
         $overall = $this->get('/pariz-nice/stage/101/results/4');
         $overall->assertStatus(200);
-        $this->assertStringContainsString('Průběžný Lídr', $overall->response()->getBody());
+        $overallHtml = $overall->response()->getBody();
+        $this->assertStringContainsString('Průběžný Lídr', $overallHtml);
+        foreach ([$stageHtml, $overallHtml] as $html) {
+            $this->assertStringContainsString('01. 03. 2024', $html);
+            $this->assertStringContainsString('30,4 km', $html);
+            $this->assertStringContainsString('Rovina', $html);
+            $this->assertStringContainsString('node_modules/flag-icons/css/flag-icons.min.css', $html);
+            $document = new DOMDocument();
+            @$document->loadHTML('<?xml encoding="UTF-8">' . $html);
+            $xpath = new DOMXPath($document);
+            $this->assertSame(4, $xpath->query('//thead/tr/th')->length);
+            $this->assertSame('', trim($xpath->query('//tbody/tr[1]/td[2]')->item(0)->textContent));
+        }
         $empty = $this->get('/pariz-nice/stage/100/results/4');
         $empty->assertStatus(200);
         $this->assertStringContainsString('nejsou v databázi dostupné výsledky', $empty->response()->getBody());
+    }
+
+    public function testFlagsUseCountryCodeAndUnknownCountryStaysEmpty(): void
+    {
+        $this->raceDb->table('rider')->where('id', 1)->update(['country' => 'CZ']);
+        $this->assertStringContainsString('fi-cz', $this->get('/pariz-nice/stage/101/results/4')->response()->getBody());
+        $this->raceDb->table('rider')->where('id', 1)->update(['country' => 'zz']);
+        $html = $this->get('/pariz-nice/stage/101/results/4')->response()->getBody();
+        $this->assertStringNotContainsString('fi-zz', $html);
+        $this->assertStringNotContainsString('aria-label="Stát ZZ"', $html);
+    }
+
+    public function testInvalidDatesShowFormWithOriginalValuesWithoutSaving(): void
+    {
+        $response = $this->post('/race-years', [
+            csrf_token() => csrf_hash(),
+            'real_name' => 'Neuložený <ročník>', 'race_id' => 124, 'year' => 2025,
+            'start_date' => '2025-03-08', 'end_date' => '2025-03-01',
+        ]);
+        $response->assertStatus(200);
+        $html = $response->response()->getBody();
+        $this->assertStringContainsString('Datum do nesmí být před datem od.', $html);
+        $document = new DOMDocument();
+        @$document->loadHTML('<?xml encoding="UTF-8">' . $html);
+        $xpath = new DOMXPath($document);
+        $this->assertSame('Neuložený <ročník>', $xpath->query('//input[@name="real_name"]')->item(0)->getAttribute('value'));
+        $this->assertSame('124', $xpath->query('//select[@name="race_id"]/option[@selected]')->item(0)->getAttribute('value'));
+        $this->assertNull((new RaceYearModel($this->raceDb))->where('real_name', 'Neuložený <ročník>')->first());
+    }
+
+    public function testSubmittedFemaleRaceIsRejected(): void
+    {
+        $response = $this->post('/race-years', [
+            csrf_token() => csrf_hash(),
+            'real_name' => 'Nepovolený ročník', 'race_id' => 125, 'year' => 2025,
+            'start_date' => '2025-03-01', 'end_date' => '2025-03-08',
+        ]);
+        $response->assertStatus(200);
+        $this->assertStringContainsString('Vyberte mužský závod kategorie E.', $response->response()->getBody());
+        $this->assertNull((new RaceYearModel($this->raceDb))->where('real_name', 'Nepovolený ročník')->first());
+    }
+
+    public function testSubmittedYearWithoutLogoIsSavedAndRedirectsToOverview(): void
+    {
+        $response = $this->post('/race-years', [
+            csrf_token() => csrf_hash(),
+            'real_name' => '  Uložený ročník  ', 'race_id' => 124, 'year' => 2025,
+            'start_date' => '2025-03-01', 'end_date' => '2025-03-08',
+        ]);
+        $year = (new RaceYearModel($this->raceDb))->where('real_name', 'Uložený ročník')->first();
+        $this->assertNotNull($year);
+        $this->assertSame(124, (int) $year['id_race']);
+        $this->assertNull($year['logo']);
+        $response->assertRedirectTo(base_url('pariz-nice') . '#rocnik-' . $year['id']);
     }
 
     public function testUnsupportedResultTypeIsRejected(): void

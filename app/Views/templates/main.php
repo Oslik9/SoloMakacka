@@ -7,38 +7,35 @@
     <title><?= esc($title ?? 'Cyklistické závody') ?> | Cyklistické závody</title>
 <?php // Bootstrap načítáme přímo z node_modules; base_url() přidá základní adresu projektu. ?>
     <link rel="stylesheet" href="<?= base_url('node_modules/bootstrap/dist/css/bootstrap.min.css') ?>">
+<?php // Vlajky i jejich CSS jsou místní soubory z npm; stránka nepoužívá CDN. ?>
+    <link rel="stylesheet" href="<?= base_url('node_modules/flag-icons/css/flag-icons.min.css') ?>">
 </head>
-<body class="bg-light d-flex flex-column min-vh-100">
-<nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm" aria-label="Hlavní navigace">
-    <div class="container py-2">
-        <span class="navbar-brand fw-semibold">Cyklistické závody</span>
+<?php // Světle modré pozadí a modrý gradient používají hotové třídy Bootstrapu. ?>
+<body class="bg-primary-subtle d-flex flex-column min-vh-100">
+<nav class="navbar navbar-expand-md navbar-dark bg-primary bg-gradient shadow-sm" aria-label="Hlavní navigace">
+    <div class="container py-3">
+<?php // Název webu vede na úvodní adresu, která přesměruje na hlavní přehled Paříž–Nice. ?>
+        <a class="navbar-brand fw-bold" href="<?= base_url() ?>" title="Úvodní stránka">Cyklistické závody</a>
 <?php // Bootstrap collapse propojí tlačítko s #mainNavbar a na mobilu rozbalí navigaci. ?>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Otevřít navigaci">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="mainNavbar">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-<?php // url_is() pozná aktuální stránku; hvězdička zahrne i stránky výsledků Paříž–Nice. ?>
-                    <a class="nav-link <?= url_is('pariz-nice*') ? 'active' : '' ?>" href="<?= base_url('pariz-nice') ?>" <?= url_is('pariz-nice*') ? 'aria-current="page"' : '' ?>>Paříž–Nice</a>
-                </li>
-            </ul>
-            <a class="btn <?= url_is('race-years/create') ? 'btn-light' : 'btn-outline-light' ?> mt-3 mt-md-0" href="<?= base_url('race-years/create') ?>" <?= url_is('race-years/create') ? 'aria-current="page"' : '' ?>>+ Přidat ročník</a>
+        <div class="collapse navbar-collapse justify-content-md-end" id="mainNavbar">
+<?php // Hvězdička zahrne zobrazení formuláře i jeho opětovný výpis po chybě POST požadavku. ?>
+            <a class="btn <?= url_is('race-years*') ? 'btn-light' : 'btn-outline-light' ?> rounded-pill px-4 fw-semibold mt-3 mt-md-0" href="<?= base_url('race-years/create') ?>" <?= url_is('race-years*') ? 'aria-current="page"' : '' ?>>+ Přidat ročník</a>
         </div>
     </div>
 </nav>
 <main class="container py-4 py-lg-5 flex-grow-1">
-<?php // Flash zprávy z controlleru zobrazíme zeleně (success) nebo červeně (error). ?>
-<?php foreach (['success' => 'success', 'error' => 'danger'] as $key => $color): ?>
-    <?php if ($message = session()->getFlashdata($key)): ?>
-        <div class="alert alert-<?= $color ?> alert-dismissible fade show" role="alert">
+<?php // Načteme zprávu uloženou controllerem přes setFlashdata(). ?>
+    <?php if ($message = session()->getFlashdata('success')): ?>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
             <?= esc($message) ?>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Zavřít"></button>
         </div>
     <?php endif; ?>
-<?php endforeach; ?>
-<?php // validation_errors() načte chyby kontroly formuláře uložené pomocí withInput(). ?>
-<?php if ($errors = validation_errors()): ?>
+<?php // Chyby dostává view přímo v poli errors předaném controllerem. ?>
+<?php if (!empty($errors)): ?>
     <div class="alert alert-danger" role="alert">
         <p class="fw-semibold mb-2">Zkontrolujte vyplněné údaje:</p>
         <ul class="mb-0">
