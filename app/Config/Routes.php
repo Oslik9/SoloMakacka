@@ -2,29 +2,25 @@
 
 use CodeIgniter\Router\RouteCollection;
 
-/**
- * @var RouteCollection $routes
- */
-
-// Úvodní URL přesměruje na přehled Paříž–Nice.
+// Úvodní adresa přesměruje na Paříž–Nice.
 $routes->addRedirect('/', 'pariz-nice');
 
-// GET zobrazí všechny ročníky a jejich etapy metodou index() v controlleru ParisNice.
+// Přehled ročníků a etap Paříž–Nice.
 $routes->get('pariz-nice', 'ParisNice::index');
 
-// Dvě (:num) přijmou číselné ID etapy a typ pořadí; $1 a $2 je předají metodě results().
+// Pořadí vybrané etapy: typ 1 v etapě, typ 4 po etapě.
 $routes->get(
     'pariz-nice/stage/(:num)/results/(:num)',
     'ParisNice::results/$1/$2'
 );
 
-// GET otevře formulář pro přidání ročníku, ale žádná data neukládá.
+// Formulář pro přidání ročníku.
 $routes->get(
     'race-years/create',
     'RaceYears::create'
 );
 
-// POST předá formulář metodě store(); filtr csrf ověří ochranný token z formuláře.
+// Uložení ročníku s kontrolou CSRF tokenu.
 $routes->post(
     'race-years',
     'RaceYears::store',
